@@ -4,9 +4,15 @@ using PowellApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<PowellApiContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PowellApiContext")));
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<PowellApiContext>(dbContextOptions => dbContextOptions
+    .UseMySql(
+    builder.Configuration["ConnectionStrings:DefaultConnection"],
+    ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]
+    )
+    )
+);
 
 // Add services to the container.
 
@@ -21,6 +27,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseHttpsRedirection();
 }
 
 app.UseHttpsRedirection();
