@@ -19,5 +19,10 @@ namespace  PowellApi.Models
           new Book { BookId = 3, Title = "C# for Dummies", Summary = "Summary3Summary3Summary3Summary3Summary3"}
         );
       }
+
+        internal object GetBooks(PagedParameters bookParameters)
+        {
+            throw new NotImplementedException();
+        }
     }
   }

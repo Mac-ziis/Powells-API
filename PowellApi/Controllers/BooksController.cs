@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PowellApi.Models;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+// using Microsoft.Extensions.Options;
+// using Microsoft.OpenApi.Models;
+// using Swashbuckle.AspNetCore.SwaggerGen;
+// using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Newtonsoft.Json;
+using PowellApi.Contracts;
+
+
 
 namespace PowellApi.Controllers
 {
@@ -13,14 +17,16 @@ namespace PowellApi.Controllers
   public class BooksController : ControllerBase
   {
     private readonly PowellApiContext _db;
-    public BooksController(PowellApiContext db)
+    private readonly IBookRepository _repository;
+    public BooksController(PowellApiContext db, IBookRepository repository)
     {
       _db = db;
+      _repository = repository;
     }
 
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Book>>> Get(string title, string author,  string summary)
+    public async Task<ActionResult<IEnumerable<Book>>> GetBooks(string title, string author,  string summary)
     {
         IQueryable<Book> query = _db.Books.AsQueryable();
 
@@ -54,6 +60,41 @@ namespace PowellApi.Controllers
 
         return book;
     }
+
+    [HttpGet]
+    [Route("paging-filter")]
+    public IActionResult GetBookPagingData([FromQuery] PagedParameters bookParameters)
+    {
+        var book = _repository.GetBooks(bookParameters);
+
+        var metadata = new
+        {
+            book.TotalCount,
+            book.PageSize,
+            book.CurrentPage,
+            book.TotalPages,
+            book.HasNext,
+            book.HasPrevious
+        };
+
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        return Ok(book);
+    }
+
+    [HttpGet]
+        [Route("getpaging-by-param")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetbooksByFilter(PagedParameters ownerParameters)
+        {
+            if (_db.Books == null)
+            {
+                return NotFound();
+            }
+            return await _db.Books.OrderBy(on => on.BookId)
+          .Skip((ownerParameters.PageNumber - 1) * ownerParameters.PageSize)
+          .Take(ownerParameters.PageSize).ToListAsync();
+        }
+
 
     [HttpPost]
     public async Task<ActionResult<Book>> Post(Book book)

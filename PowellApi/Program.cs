@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PowellApi.Models;
+using PowellApi.Repository;
+using PowellApi.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<PowellApiContext>(dbContextOptions => dbContextOpt
     )
     )
 );
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 // Add services to the container.
 
