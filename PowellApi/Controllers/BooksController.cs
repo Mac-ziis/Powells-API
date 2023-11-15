@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PowellApi.Models;
-// using Microsoft.Extensions.Options;
-// using Microsoft.OpenApi.Models;
-// using Swashbuckle.AspNetCore.SwaggerGen;
-// using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Newtonsoft.Json;
 using PowellApi.Contracts;
 

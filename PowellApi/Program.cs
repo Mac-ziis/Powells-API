@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using PowellApi.Models;
 using PowellApi.Repository;
 using PowellApi.Contracts;
