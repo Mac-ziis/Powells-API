@@ -10,7 +10,7 @@ using PowellApi.Models;
 namespace PowellApi.Migrations
 {
     [DbContext(typeof(PowellApiContext))]
-    [Migration("20231112195234_Initial")]
+    [Migration("20231116002041_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
