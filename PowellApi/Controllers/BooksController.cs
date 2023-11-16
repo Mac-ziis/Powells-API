@@ -5,9 +5,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PowellApi.Controllers
 {
+    [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class BooksController : ControllerBase

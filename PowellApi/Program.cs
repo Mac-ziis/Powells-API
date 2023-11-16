@@ -18,6 +18,14 @@ builder.Services.AddDbContext<PowellApiContext>(dbContextOptions => dbContextOpt
     )
 );
 
+builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions => dbContextOptions
+    .UseMySql(
+    builder.Configuration["ConnectionStrings:DefaultConnection"],
+    ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]
+    )
+    )
+);
+
 // For Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -29,10 +37,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-});
-
-// Adding Jwt Bearer
-.AddJwtBearer(options =>
+}).AddJwtBearer(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
